@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        /* Dark Background with Sea-Green Theme */
+body {
+    background: #121212;
+    color: #d9d9d9;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Page Container */
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+/* Title */
+h1 {
+    color: #00bfa6;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Code Box with Glass Effect */
+.code-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2);
+    text-align: left;
+    overflow: hidden;
+}
+
+/* Code Styling */
+pre {
+    margin: 0;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* Copy Button */
+.copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #00bfa6;
+    color: #121212;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.copy-btn:hover {
+    background: #00d4b0;
+}
+        </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <br>
+   &nbsp;<a href="index.html" style="
+    display: inline-block; 
+    background-color: seagreen; 
+    color: white; 
+    text-align: flex-start;
+    padding: 10px 20px; 
+    font-size: 18px; 
+    text-decoration: none; 
+    font-weight: bold; 
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;">
+    Home Page
+</a>
+    <title>Code Snippet Sharing</title>
+    <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Code Snippet Sharing</h1>
+        <div class="code-box">
+            <pre><code class="language-javascript">
+ const { exec } = require("child_process");
+
+// Function to get the active Wi-Fi profile name
+function getWifiProfile() {
+return new Promise((resolve, reject) => {
+ exec('netsh wlan show interfaces', (error, stdout) => {
+  if (error) {
+  return reject("Error fetching Wi-Fi details: " + error.message);
+            }
+ const match = stdout.match(/SSID\s*:\s(.*)/);
+  if (match) {
+                resolve(match[1].trim());
+            } else {
+                reject("No active Wi-Fi connection found.");
+            }
+        });
+    });
+}
+
+// Function to retrieve the password of a given Wi-Fi profile
+function getWifiPassword(profile) {
+    return new Promise((resolve, reject) => {
+ exec(`netsh wlan show profile name="${profile}" key=clear`, (error, stdout) => {
+ if (error) {
+                return reject("Error fetching Wi-Fi password: " + error.message);
+            }
+ const match = stdout.match(/Key Content\s*:\s(.*)/);
+if (match) {
+                resolve(match[1].trim());
+            } else {
+ reject("Wi-Fi password not found or stored.");
+            }
+        });
+    });
+}
+
+// Main function to execute the process
+(async () => {
+    try {
+ const profile = await getWifiProfile();
+  console.log(`✅ Connected Wi-Fi: ${profile}`);
+
+ const password = await getWifiPassword(profile);
+ console.log(`🔑 Wi-Fi Password: ${password}`);
+    } catch (error) {
+     console.error("❌ " + error);
+    }
+})();
+            </code></pre>
+            <button class="copy-btn">Copy</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="script.js"></script>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const copyBtn = document.querySelector(".copy-btn");
+    const codeBlock = document.querySelector("pre code");
+
+    copyBtn.addEventListener("click", function () {
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => copyBtn.textContent = "Copy", 1500);
+        });
+    });
+});
+</script>
+</html>
